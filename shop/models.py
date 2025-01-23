@@ -1,18 +1,26 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class Categoria(models.Model):
     nome=models.CharField(max_length=200)
     slug=models.SlugField(max_length=200,unique=True)
     
-    class Meta:
-        ordering=['nome']
-        indexes=[
-            models.Index(fields=['nome']),
-        ]
-        verbose_name='categoria'
-        verbose_name_plural='categorias'
-        
+    def get_absolute_url(self):
+        return reverse(
+            'shop:produto_list_por_categoria', 
+            args={self.slug}
+            )
+    
+    
+class Meta:
+    ordering=['nome']
+    indexes=[
+        models.Index(fields=['nome']),
+    ]
+    verbose_name='categoria'
+    verbose_name_plural='categorias'
+    
     def __str__(self):
         return self.nome
 
@@ -35,6 +43,12 @@ class Produto(models.Model):
     disponivel=models.BooleanField(default=True)
     criado=models.DateTimeField(auto_now_add=True)
     atualizado=models.DateTimeField(auto_now=True)
+    def get_absolute_url(self):
+        return reverse(
+            'shop:produto_detalhe', 
+            args={self.id,self.slug}
+            )
+    
     
 class Meta:
     ordering=['nome']
