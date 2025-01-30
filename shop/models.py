@@ -6,24 +6,24 @@ class Categoria(models.Model):
     nome=models.CharField(max_length=200)
     slug=models.SlugField(max_length=200,unique=True)
     
+    class Meta:
+        ordering=['nome']
+        indexes=[
+            models.Index(fields=['nome']),
+        ]
+        verbose_name='categoria'
+        verbose_name_plural='categorias'
+    
     def get_absolute_url(self):
         return reverse(
             'shop:produto_list_por_categoria', 
             args={self.slug}
             )
     
-    
-class Meta:
-    ordering=['nome']
-    indexes=[
-        models.Index(fields=['nome']),
-    ]
-    verbose_name='categoria'
-    verbose_name_plural='categorias'
-    
     def __str__(self):
         return self.nome
 
+    
 class Produto(models.Model):
     categoria=models.ForeignKey(
         Categoria,
@@ -50,14 +50,14 @@ class Produto(models.Model):
             )
     
     
-class Meta:
-    ordering=['nome']
-    indexes=[
-        models.Index(fields=['id','slug']),
-        models.Index(fields=['nome']),
-        models.Index(fields=['criado']),
-    ]
-    
+    class Meta:
+        ordering=['nome']
+        indexes=[
+            models.Index(fields=['id','slug']),
+            models.Index(fields=['nome']),
+            models.Index(fields=['criado']),
+        ]
+        
     def __str__(self):
-        return self.name
+        return self.nome
     
