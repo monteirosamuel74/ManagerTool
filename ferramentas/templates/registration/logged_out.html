@@ -1,0 +1,8 @@
+{% extends "ferramentas/base.html" %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+    <h1>Você foi desconectado.</h1>
+    <p><a href="{% url 'ferramentas:lista_ferramentas' %}">Voltar para a página inicial</a></p>
+{% endblock %}

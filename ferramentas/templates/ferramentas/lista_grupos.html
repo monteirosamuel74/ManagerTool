@@ -1,0 +1,13 @@
+{% extends "ferramentas/base.html" %}
+
+{% block title %}Grupos{% endblock %}
+
+{% block content %}
+    <h1>Grupos</h1>
+    <ul>
+        {% for grupo in grupos %}
+            <li>{{ grupo.nome }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'ferramentas:criar_grupo' %}">Criar Novo Grupo</a>
+{% endblock %}

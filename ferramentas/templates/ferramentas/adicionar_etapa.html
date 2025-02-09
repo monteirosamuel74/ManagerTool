@@ -1,0 +1,12 @@
+{% extends "ferramentas/base.html" %}
+
+{% block title %}Adicionar Etapa{% endblock %}
+
+{% block content %}
+    <h1>Adicionar Etapa ao Ciclo PDCA: {{ pdca.nome }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Adicionar</button>
+    </form>
+{% endblock %}

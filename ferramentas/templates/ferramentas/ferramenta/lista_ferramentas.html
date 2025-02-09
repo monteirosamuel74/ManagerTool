@@ -1,0 +1,16 @@
+{% extends "ferramentas/base.html" %}
+
+{% block title %}Ferramentas de Gestão{% endblock %}
+
+{% block content %}
+    <h1>Ferramentas de Gestão</h1>
+    {% for ferramenta in ferramentas %}
+        <div>
+            <h2>{{ ferramenta.nome }}</h2>
+            <p>{{ ferramenta.descricao }}</p>
+            {% if ferramenta.dono == request.user %}
+                <a href="{% url 'ferramentas:editar_ferramenta' ferramenta.id %}">Editar</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

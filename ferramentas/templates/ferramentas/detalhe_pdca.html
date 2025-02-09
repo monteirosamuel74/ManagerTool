@@ -1,0 +1,18 @@
+{% extends "ferramentas/base.html" %}
+
+{% block title %}{{ pdca.nome }}{% endblock %}
+
+{% block content %}
+    <h1>{{ pdca.nome }}</h1>
+    <p>{{ pdca.descricao }}</p>
+    <h2>Etapas</h2>
+    <ul>
+        {% for etapa in etapas %}
+            <li>
+                <strong>{{ etapa.get_tipo_display }}:</strong> {{ etapa.descricao }}
+                {% if etapa.concluido %}(Concluído){% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'ferramentas:adicionar_etapa' pdca.id %}">Adicionar Etapa</a>
+{% endblock %}
