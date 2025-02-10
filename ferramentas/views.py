@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Grupo, Ferramenta, PDCA, EtapaPDCA
 from .forms import GrupoForm, FerramentaForm, PDCAForm, EtapaPDCAForm
@@ -10,6 +10,8 @@ from .models import Metodologia, Ferramenta
 # Create your views here.
 
 def ferramenta_list(request,metodologia_slug=None):
+    if not request.user.is_authenticated:
+        return redirect('login')
     metodologia=None
     metodologias=Metodologia.objects.all()
     ferramentas=Ferramenta.objects.filter(disponivel=True)
@@ -26,6 +28,8 @@ def ferramenta_list(request,metodologia_slug=None):
             'ferramentas':ferramentas
         }
     )
+    
+    
     
 def registrar(request):
     if request.method == 'POST':
@@ -54,10 +58,12 @@ def criar_grupo(request):
     return render(request, 'ferramentas/criar_grupo.html', {'form': form})
 
 
+
 @login_required
 def lista_grupos(request):
     grupos = Grupo.objects.filter(membros=request.user)
     return render(request, 'ferramentas/lista_grupos.html', {'grupos': grupos})
+
 
 
 @login_required
@@ -72,6 +78,8 @@ def criar_ferramenta(request):
     else:
         form = FerramentaForm()
     return render(request, 'ferramentas/criar_ferramenta.html', {'form': form})
+
+
 
 @login_required
 def editar_ferramenta(request, id):
@@ -88,10 +96,13 @@ def editar_ferramenta(request, id):
     return render(request, 'ferramentas/editar_ferramenta.html', {'form': form})
 
 
+
 @login_required
 def lista_pdcas(request):
     pdcas = PDCA.objects.filter(criado_por=request.user)  # Mostra apenas PDCA do usuário
     return render(request, 'ferramentas/lista_pdcas.html', {'pdcas': pdcas})
+
+
 
 @login_required
 def criar_pdca(request):
@@ -106,11 +117,15 @@ def criar_pdca(request):
         form = PDCAForm()
     return render(request, 'ferramentas/criar_pdca.html', {'form': form})
 
+
+
 @login_required
 def detalhe_pdca(request, id):
     pdca = get_object_or_404(PDCA, id=id)
     etapas = pdca.etapas.all()
     return render(request, 'ferramentas/detalhe_pdca.html', {'pdca': pdca, 'etapas': etapas})
+
+
 
 @login_required
 def adicionar_etapa(request, id):
@@ -127,3 +142,16 @@ def adicionar_etapa(request, id):
     return render(request, 'ferramentas/adicionar_etapa.html', {'form': form, 'pdca': pdca})
 
 
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('nome_da_view_principal')  # Altere 'nome_da_view_principal' para a view principal do seu app
+        else:
+            # Erro de autenticação
+            return render(request, 'login.html', {'error': 'Credenciais inválidas'})
+    return render(request, 'login.html')
