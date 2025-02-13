@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
-
+from django.conf import settings
 
 # Create your models here.
 class Metodologia(models.Model):
@@ -29,7 +28,7 @@ class Metodologia(models.Model):
 
 class Grupo(models.Model):
     nome = models.CharField(max_length=200)
-    membros = models.ManyToManyField(User, related_name='grupos')
+    membros = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='grupos')
 
     def __str__(self):
         return self.nome
@@ -56,7 +55,7 @@ class Ferramenta(models.Model):
     criado=models.DateTimeField(auto_now_add=True)
     atualizado=models.DateTimeField(auto_now=True)
     grupo = models.ForeignKey('Grupo', related_name='ferramentas', on_delete=models.SET_NULL, null=True, blank=True)
-    dono = models.ForeignKey(User, related_name='ferramentas', on_delete=models.CASCADE)
+    dono = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ferramentas', on_delete=models.CASCADE)
     
     class Meta:
         ordering=['nome']
@@ -74,7 +73,7 @@ class Ferramenta(models.Model):
 class PDCA(models.Model):
     nome = models.CharField(max_length=200)
     descricao = models.TextField(blank=True)
-    criado_por = models.ForeignKey(User, related_name='pdcas', on_delete=models.CASCADE)
+    criado_por = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='pdcas', on_delete=models.CASCADE)
     grupo = models.ForeignKey(Grupo, related_name='pdcas', on_delete=models.SET_NULL, null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)

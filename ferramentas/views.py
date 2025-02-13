@@ -10,7 +10,9 @@ from .models import Metodologia, Ferramenta
 # Create your views here.
 
 def ferramenta_list(request,metodologia_slug=None):
-    if not request.user.is_authenticated:
+    print("01")
+    if request.user.is_authenticated:
+        print("02")
         return redirect('login')
     metodologia=None
     metodologias=Metodologia.objects.all()
@@ -150,8 +152,8 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('nome_da_view_principal')  # Altere 'nome_da_view_principal' para a view principal do seu app
+            return redirect('registration/login.html')  # Altere 'nome_da_view_principal' para a view principal do seu app
         else:
             # Erro de autenticação
             return render(request, 'login.html', {'error': 'Credenciais inválidas'})
-    return render(request, 'login.html')
+    return render(request, 'registration/login.html')
